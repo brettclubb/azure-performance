@@ -27,13 +27,13 @@ logger = logging.getLogger(__name__)
 # Metrics
 exporter = metrics_exporter.new_metrics_exporter(
   enable_standard_metrics=True,
-  connection_string='InstrumentationKey=5bf10a27-4ada-4470-bfed-4d6e77632bb6'
+  connection_string='InstrumentationKey=97fa0e78-7b6e-42d6-95ad-45b6fd096099'
 )
 
 # Tracing
 tracer = Tracer(
     exporter=AzureExporter(
-        connection_string='InstrumentationKey=5bf10a27-4ada-4470-bfed-4d6e77632bb6'),
+        connection_string='InstrumentationKey=97fa0e78-7b6e-42d6-95ad-45b6fd096099'),
     sampler=ProbabilitySampler(1.0),
 )
 
@@ -42,7 +42,7 @@ app = Flask(__name__)
 # Requests
 middleware = FlaskMiddleware(
     app,
-    exporter=AzureExporter(connection_string="InstrumentationKey=5bf10a27-4ada-4470-bfed-4d6e77632bb6"),
+    exporter=AzureExporter(connection_string="InstrumentationKey=97fa0e78-7b6e-42d6-95ad-45b6fd096099"),
     sampler=ProbabilitySampler(rate=1.0),
 )
 
@@ -101,12 +101,12 @@ def index():
             vote1 = r.get(button1).decode('utf-8')
             properties = {'custom_dimensions': {'Cats Vote': vote1}}
             # use logger object to log cat vote
-            tracer.span(name="CatsVote")
+            logger.warning('Cats', extra=properties)
 
             vote2 = r.get(button2).decode('utf-8')
             properties = {'custom_dimensions': {'Dogs Vote': vote2}}
             # use logger object to log dog vote
-            tracer.span(name="DogsVote")
+            logger.warning('Dogs', extra=properties)
             return render_template("index.html", value1=int(vote1), value2=int(vote2), button1=button1, button2=button2, title=title)
 
         else:
